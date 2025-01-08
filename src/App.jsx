@@ -6,81 +6,55 @@ const App = () => {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch data from Airtable
-  const fetchData = async () => {
-    const url = `https://api.airtable.com/v0/${
-      import.meta.env.VITE_AIRTABLE_BASE_ID
-    }/${import.meta.env.VITE_TABLE_NAME}`;
-    const options = {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
-      },
-    };
-
-    try {
-      const response = await fetch(url, options);
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      const todos = data.records.map((record) => ({
-        id: record.id,
-        title: record.fields.title,
-      }));
-
-      setTodoList(todos);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Fetch error:", error.message);
-    }
-  };
-
+  // Fetch data from Airtable or localStorage
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  // Save to Airtable when todoList changes
-  useEffect(() => {
-    const saveTodos = async () => {
+    const fetchData = async () => {
       const url = `https://api.airtable.com/v0/${
         import.meta.env.VITE_AIRTABLE_BASE_ID
       }/${import.meta.env.VITE_TABLE_NAME}`;
+      const options = {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+        },
+      };
 
-      todoList.forEach(async (todo) => {
-        const options = {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
-          },
-          body: JSON.stringify({
-            fields: {
-              title: todo.title,
-            },
-          }),
-        };
-
-        try {
-          const response = await fetch(`${url}/${todo.id}`, options);
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-          }
-        } catch (error) {
-          console.error("Save error:", error.message);
+      try {
+        const response = await fetch(url, options);
+        if (response.ok) {
+          const data = await response.json();
+          const todos = data.records.map((record) => ({
+            id: record.id,
+            title: record.fields.title,
+          }));
+          setTodoList(todos);
+        } else {
+          throw new Error(`Error: ${response.status}`);
         }
-      });
+      } catch (error) {
+        console.error("Fetch error from Airtable:", error.message);
+
+        // Fallback to localStorage if Airtable fetch fails
+        setTimeout(() => {
+          const savedTodos =
+            JSON.parse(localStorage.getItem("savedTodoList")) || [];
+          setTodoList(savedTodos);
+        }, 2000);
+      }
+      setIsLoading(false);
     };
 
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (!isLoading) {
-      saveTodos();
+      localStorage.setItem("savedTodoList", JSON.stringify(todoList));
     }
   }, [todoList, isLoading]);
 
   const addTodo = async (newTodo) => {
+    // Add to Airtable first
     const url = `https://api.airtable.com/v0/${
       import.meta.env.VITE_AIRTABLE_BASE_ID
     }/${import.meta.env.VITE_TABLE_NAME}`;
@@ -99,7 +73,6 @@ const App = () => {
 
     try {
       const response = await fetch(url, options);
-
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
@@ -113,6 +86,9 @@ const App = () => {
       setTodoList((prevList) => [...prevList, createdTodo]);
     } catch (error) {
       console.error("Add Todo error:", error.message);
+
+      // Fallback to localStorage if Airtable fails
+      setTodoList((prevList) => [...prevList, newTodo]);
     }
   };
 
@@ -129,11 +105,9 @@ const App = () => {
 
     try {
       const response = await fetch(url, options);
-
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-
       setTodoList((prevList) => prevList.filter((todo) => todo.id !== id));
     } catch (error) {
       console.error("Remove Todo error:", error.message);
@@ -142,7 +116,7 @@ const App = () => {
 
   return (
     <>
-      <h1>Plan. Execute. Repeat.</h1>
+      <h1>Plan. Execute. Repeat</h1>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
