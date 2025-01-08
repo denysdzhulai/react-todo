@@ -43,10 +43,40 @@ const App = () => {
     fetchData();
   }, []);
 
-  // Save to localStorage
+  // Save to Airtable when todoList changes
   useEffect(() => {
+    const saveTodos = async () => {
+      const url = `https://api.airtable.com/v0/${
+        import.meta.env.VITE_AIRTABLE_BASE_ID
+      }/${import.meta.env.VITE_TABLE_NAME}`;
+
+      todoList.forEach(async (todo) => {
+        const options = {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+          },
+          body: JSON.stringify({
+            fields: {
+              title: todo.title,
+            },
+          }),
+        };
+
+        try {
+          const response = await fetch(`${url}/${todo.id}`, options);
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+        } catch (error) {
+          console.error("Save error:", error.message);
+        }
+      });
+    };
+
     if (!isLoading) {
-      localStorage.setItem("savedTodoList", JSON.stringify(todoList));
+      saveTodos();
     }
   }, [todoList, isLoading]);
 
