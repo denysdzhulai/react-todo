@@ -1,12 +1,14 @@
 /* Root Container */
 #root {
   max-width: 720px;
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 2rem;
   text-align: center;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
+  background-image: radial-gradient(#d3d3d3 1px, transparent 1px);
+  background-size: 12px 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border: 1px solid #e0e0e0;
   font-family: "Arial", sans-serif;
 }
 
@@ -14,63 +16,110 @@
 h1 {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: #343a40;
+  color: #212121;
+  display: inline-block;
+  padding-bottom: 0.25rem;
 }
 
+/* Form */
 form {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 form input {
-  padding: 0.75rem;
+  padding: 0.5rem 0.75rem;
   font-size: 1rem;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
+  border: 2px solid #212121;
+  border-radius: 0;
   width: 60%;
-  transition: box-shadow 0.3s;
+  outline: none;
 }
 
 form input:focus {
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
   outline: none;
 }
 
 form button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
-  border: none;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 5px;
+  border: 2px solid #212121;
+  background-color: #ffffff;
+  color: #212121;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 form button:hover {
-  background-color: #0056b3;
+  background-color: #0ea500;
+  color: #ffffff;
 }
 
+/* Todo List */
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 li {
   background-color: #ffffff;
   margin: 0.5rem 0;
   padding: 1rem;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
+  border: 2px solid #212121;
+  border-radius: 0;
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 li:hover {
-  background-color: #f1f3f5;
+  background-color: #f8f9fa;
+}
+
+/* Remove Button */
+li button {
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  border: 2px solid #212121;
+  background-color: transparent;
+  color: #212121;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+li button:hover {
+  background-color: #c71c1c;
+  color: #fff;
+}
+
+/* Geometrical lines decoration */
+body:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 98%, #777777dc 2%);
+  background-size: 100% 20px;
+  z-index: -1;
+}
+
+body:after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent 98%, #e0e0e0 2%);
+  background-size: 20px 100%;
+  z-index: -1;
 }
