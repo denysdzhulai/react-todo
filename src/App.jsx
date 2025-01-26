@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import TodoList from "./TodoList";
 import AddTodoForm from "./AddTodoForm";
@@ -8,6 +8,8 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch data from Airtable
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const fetchData = async () => {
     const url = `https://api.airtable.com/v0/${
       import.meta.env.VITE_AIRTABLE_BASE_ID
@@ -20,6 +22,7 @@ const App = () => {
     };
 
     try {
+      await delay(2000);
       const response = await fetch(url, options);
 
       if (!response.ok) {
@@ -119,9 +122,9 @@ const App = () => {
           path="/"
           element={
             <>
-              <h1>Plan. Execute. Repeat.</h1>
+              <h1>Organize. Prioritize. Succeed.</h1>
               {isLoading ? (
-                <p>Loading...</p>
+                <p>Hold tight, magic is happening...</p>
               ) : (
                 <>
                   <AddTodoForm onAddTodo={addTodo} />
