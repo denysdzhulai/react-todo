@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #f3faf7;
+}
 /* Root Container */
 #root {
   max-width: 720px;
@@ -9,7 +15,6 @@
   background-size: 12px 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #e0e0e0;
-  font-family: "Arial", sans-serif;
 }
 
 /* Header */
@@ -35,7 +40,6 @@ form input {
   font-size: 1rem;
   border: 2px solid #212121;
   border-radius: 0;
-  width: 60%;
   outline: none;
 }
 
@@ -122,4 +126,19 @@ body:after {
   background: linear-gradient(to right, transparent 98%, #e0e0e0 2%);
   background-size: 20px 100%;
   z-index: -1;
+}
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  form {
+    flex-direction: column;
+  }
 }
