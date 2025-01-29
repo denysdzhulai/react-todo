@@ -1,4 +1,4 @@
-import TodoListItem from "./TodoListItem";
+import TodoListItem from "./assets/TodoListItem/TodoListItem";
 
 function TodoList({ todoList, onRemoveTodo }) {
   return (

@@ -1,4 +1,4 @@
-.ListItem {
+.listItem {
   background-color: #ffffff;
   margin: 0.5rem 0;
   padding: 1rem;
@@ -9,6 +9,6 @@
   align-items: center;
 }
 
-.ListItem:hover {
+.listItem:hover {
   background-color: #f8f9fa;
 }
