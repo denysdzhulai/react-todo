@@ -8,7 +8,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showLoadingMessage, setShowLoadingMessage] = useState(false);
 
-  // Show loading message only if loading takes more than 2 seconds
+  // Show loading message only if loading takes more than 2 sec
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isLoading) {
