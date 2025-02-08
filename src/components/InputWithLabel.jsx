@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 
-const InputWithLabel = ({ id, value, onInputChange, children }) => {
+const InputWithLabel = ({ id, value, onInputChange }) => {
   const inputRef = useRef();
 
   useEffect(() => {
@@ -9,7 +10,7 @@ const InputWithLabel = ({ id, value, onInputChange, children }) => {
 
   return (
     <>
-      <label htmlFor={id}>{children}</label>
+      <label htmlFor={id}></label>
       <input
         id={id}
         type="text"
@@ -20,6 +21,12 @@ const InputWithLabel = ({ id, value, onInputChange, children }) => {
       />
     </>
   );
+};
+
+InputWithLabel.propTypes = {
+  id: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onInputChange: PropTypes.func.isRequired,
 };
 
 export default InputWithLabel;

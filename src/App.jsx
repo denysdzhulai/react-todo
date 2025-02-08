@@ -1,15 +1,25 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import TodoList from "./TodoList";
-import AddTodoForm from "./AddTodoForm";
+import TodoList from "./components/TodoList";
+import AddTodoForm from "./components/AddTodoForm";
 
 const App = () => {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showLoadingMessage, setShowLoadingMessage] = useState(false);
+
+  // Show loading message only if loading takes more than 2 sec
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isLoading) {
+        setShowLoadingMessage(true);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer); 
+  }, [isLoading]);
 
   // Fetch data from Airtable
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
   const fetchData = async () => {
     const url = `https://api.airtable.com/v0/${
       import.meta.env.VITE_AIRTABLE_BASE_ID
@@ -22,7 +32,6 @@ const App = () => {
     };
 
     try {
-      await delay(2000);
       const response = await fetch(url, options);
 
       if (!response.ok) {
@@ -37,9 +46,10 @@ const App = () => {
       }));
 
       setTodoList(todos);
-      setIsLoading(false);
     } catch (error) {
       console.error("Fetch error:", error.message);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -124,7 +134,7 @@ const App = () => {
             <>
               <h1>Organize. Prioritize. Succeed.</h1>
               {isLoading ? (
-                <p>Hold tight, magic is happening...</p>
+                showLoadingMessage ? <p>Hold tight, magic is happening...</p> : null
               ) : (
                 <>
                   <AddTodoForm onAddTodo={addTodo} />
