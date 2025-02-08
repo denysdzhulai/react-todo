@@ -142,3 +142,32 @@ body:after {
     flex-direction: column;
   }
 }
+
+/* Sorting Buttons */
+.sort-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sort-btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #212121;
+  background-color: #ffffff;
+  color: #212121;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.sort-btn:hover {
+  background-color: #0ea500;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.sort-btn.active {
+  background-color: #007bff;
+  color: #ffffff;
+}
