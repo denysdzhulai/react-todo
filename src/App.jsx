@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import TodoList from "./components/TodoList";
-import AddTodoForm from "./components/AddTodoForm";
-import "./index.css"; // Import updated styles
+import { Link } from "react-router-dom";
+import TodoList from "./components/TodoList.jsx";
+import AddTodoForm from "./components/AddTodoForm.jsx";
+import About from "./pages/About.jsx";
+import "./index.css";
 
 const App = () => {
   const [todoList, setTodoList] = useState([]);
@@ -10,8 +12,9 @@ const App = () => {
   const [showLoadingMessage, setShowLoadingMessage] = useState(false);
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortBy, setSortBy] = useState("title");
+  const [darkMode, setDarkMode] = useState(false);
 
-    // Show loading message only if loading takes more than 2 sec
+  // Show loading message only if loading takes more than 2 sec
   useEffect(() => {
     const timer = setTimeout(() => {
       if (isLoading) {
@@ -21,6 +24,20 @@ const App = () => {
 
     return () => clearTimeout(timer);
   }, [isLoading]);
+
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode") === "true";
+    setDarkMode(savedDarkMode);
+  }, []); // Runs once when the component mounts
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+    localStorage.setItem("darkMode", darkMode); // Save to localStorage
+  }, [darkMode]); // Runs whenever darkMode changes
 
   const fetchData = async () => {
     const url = `https://api.airtable.com/v0/${
@@ -67,7 +84,8 @@ const App = () => {
   useEffect(() => {
     fetchData();
   }, [sortOrder, sortBy]);
-// Save to localStorage
+
+  // Save to localStorage
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem("savedTodoList", JSON.stringify(todoList));
@@ -151,30 +169,42 @@ const App = () => {
           path="/"
           element={
             <>
-              <h1>Organize. Prioritize. Succeed.</h1>
+              <h1>Get-It-Done</h1>
               {isLoading ? (
-                showLoadingMessage ? <p>Hold tight, magic is happening...</p> : null
+                showLoadingMessage ? (
+                  <p>Hold tight, magic is happening...</p>
+                ) : null
               ) : (
                 <>
+                  <nav>
+                    <Link to="/about" className="about-btn">
+                      About
+                    </Link>
+                    <button
+                      className="dark-mode-toggle"
+                      onClick={() => setDarkMode((prevMode) => !prevMode)}
+                    >
+                      {darkMode ? "Light Mode" : "Dark Mode"}
+                    </button>
+                  </nav>
                   <div className="sort-buttons">
                     <button
-                      className={`sort-btn ${sortBy === "title" ? "active" : ""}`}
+                      className={`sort-btn ${
+                        sortBy === "title" ? "active" : ""
+                      }`}
                       onClick={() => setSortBy("title")}
                     >
                       Sort by Title {sortOrder === "asc" ? "A-Z" : "Z-A"}
                     </button>
                     <button
-                      className={`sort-btn ${sortBy === "createdTime" ? "active" : ""}`}
+                      className={`sort-btn ${
+                        sortBy === "createdTime" ? "active" : ""
+                      }`}
                       onClick={() => setSortBy("createdTime")}
                     >
-                      Sort by Date {sortOrder === "asc" ? "Oldest First" : "Newest First"}
+                      Sort by Date{" "}
+                      {sortOrder === "asc" ? "Oldest First" : "Newest First"}
                     </button>
-                    {/* <button
-                      className="sort-btn"
-                      onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                    >
-                      Toggle Order
-                    </button> */}
                   </div>
 
                   <AddTodoForm onAddTodo={addTodo} />
@@ -186,7 +216,7 @@ const App = () => {
         />
 
         {/* New Route */}
-        <Route path="/new" element={<h1>New Todo List</h1>} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );
